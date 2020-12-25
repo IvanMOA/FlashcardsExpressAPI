@@ -1,0 +1,18 @@
+{"level":"info","message":"Hello distributed log files!","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received","service":"user-service"}
+{"level":"info","message":"Request received"}
+{"level":"info","message":"Request received"}
+{"level":"info","message":"Request received"}
+{"level":"info","message":"Request received"}

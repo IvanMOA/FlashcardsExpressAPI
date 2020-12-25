@@ -1,0 +1,4 @@
+src/jwks.json
+node_modules/
+dist/
+.env
