@@ -4,26 +4,6 @@ import jwt from "jsonwebtoken"
 import JWK from "../jwks.json"
 import jwkToPem from "jwk-to-pem"
 
-interface AWSIDToken {
-    header: {
-        kid: string
-        alg: string
-    }
-    payload: {
-        sub: string
-        aud: string
-        email_verified: string
-        token_use: string
-        auth_time: string
-        iss: string
-        "cognito:username": string
-        exp: string
-        given_name: string
-        iat: string
-        email: string
-    }
-}
-
 const authenticateWithJWT =(req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization)
         return res.status(401).send()
