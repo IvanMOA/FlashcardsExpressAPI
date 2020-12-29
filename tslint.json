@@ -7,7 +7,18 @@
     "rules": {
         "trailing-comma": [ false ], 
             "no-console": false,
-            "no-debugger": false
+            "no-debugger": false,
+            "no-consecutive-blank-lines": false,
+            "member-access" : false,
+            "one-line": false,
+            "arrow-parens" : false,
+            "align" : false,
+            "typedef-whitespace" : false,
+            "semicolon": false,
+            "whitespace": false,
+            "ordered-imports": false,
+            "object-literal-sort-keys": false,
+            "interface-over-type-literal": false
     },
     "rulesDirectory": []
 }

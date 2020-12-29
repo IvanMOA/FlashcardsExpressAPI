@@ -1,25 +1,24 @@
+import express from "express";
 import { Router } from "express";
-import express from "express"
-import {Request, Response} from 'express'
-import authenticateWithJWT from "../middleware/authenticateWithJWT"
-const itemRouter : Router = express.Router()
+import ItemController from "../controllers/ItemController";
+import { body } from "express-validator";
+// import authenticateWithJWT from "../middleware/authenticateWithJWT";
+const itemRouter: Router = express.Router();
 
-import itemRepo from "../data/ItemMockRepo"
-let count = 0
+const validateItem = [
+  body("description").isString(),
+  body("stock").isNumeric(),
+  body("name").isString(),
+  body("image").isString(),
+  body("price").isNumeric(),
+];
 
+itemRouter.get("/", ItemController.getAllItems);
 
-itemRouter.get("/", authenticateWithJWT, (req: Request, res: Response) => {
-    res.send(itemRepo.getAllItems())
-})
+itemRouter.post("/", ...validateItem, ItemController.createItem);
 
-itemRouter.post("/", (req: Request, res: Response) => {
-    const { name, price, stock, description, image} = req.body;
-    const item : IItem = {id: count, name, price, stock, description, image}
-    itemRepo.addItem(item)
-    count++
-    res.status(200).send(item)
-})
+itemRouter.delete("/:id", ItemController.deleteItemById);
 
+itemRouter.put("/:id", ...validateItem, ItemController.updateItem);
 
-export default itemRouter
-
+export default itemRouter;
