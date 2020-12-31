@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import itemRepo from "../data/ItemMockRepo";
 import { validationResult } from "express-validator";
 
+import sqlRepo from "../models/Item";
+
 class ItemController {
   itemRepo: IItemRepo;
   count: number;
@@ -16,7 +18,7 @@ class ItemController {
   getItemById = (id: number) => {
     return itemRepo.getItemById(id);
   };
-  createItem = (req: Request, res: Response) => {
+  createItem = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -30,8 +32,17 @@ class ItemController {
       stock,
       id: this.count,
     };
+    // itemRepo.addItem(item);
+    await sqlRepo.sync();
+    await sqlRepo.create({
+      id: this.count,
+      name,
+      description,
+      image,
+      price,
+      stock,
+    });
     this.count++;
-    itemRepo.addItem(item);
     res.status(201).send(item);
   };
   deleteItemById = (req: Request, res: Response) => {
