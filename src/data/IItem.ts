@@ -3,7 +3,7 @@ interface IItem {
   name: string;
   description: string;
   stock: number;
-  price: string;
+  price: number;
   image: string;
 }
 
@@ -20,4 +20,3 @@ type ItemPropToPatch = {
   field: "id" | "name" | "description" | "stock" | "price" | "image";
   value: number | string;
 };
-

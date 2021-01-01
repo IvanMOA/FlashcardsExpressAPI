@@ -8,7 +8,7 @@ class Item extends Model<IItem, ItemCreationAttributes > implements IItem {
   name!: string;
   description!: string;
   stock!: number;
-  price!: string;
+  price!: number;
   image!: string;
 
   public readonly createdAt!: Date;

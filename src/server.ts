@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import ItemRouter from "./routes/item";
+import ItemRouter from "./routes/itemRouter";
 
 dotenv.config();
 const port = 3001 || process.env.PORT;
