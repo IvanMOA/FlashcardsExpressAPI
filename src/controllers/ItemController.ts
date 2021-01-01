@@ -1,19 +1,18 @@
 import { Request, Response } from "express";
-import itemRepo from "../data/ItemMockRepo";
+import itemRepo from "../data/ItemSQLRepo";
 import { validationResult } from "express-validator";
 
-import sqlRepo from "../models/Item";
 
 class ItemController {
   itemRepo: IItemRepo;
   count: number;
 
   constructor(iRepo: IItemRepo) {
-    this.count = 0;
     this.itemRepo = iRepo;
   }
-  getAllItems = (req: Request, res: Response) => {
-    res.send(itemRepo.getAllItems());
+  getAllItems = async (req: Request, res: Response) => {
+    const items = await this.itemRepo.getAllItems()
+    res.send(items);
   };
   getItemById = (id: number) => {
     return itemRepo.getItemById(id);
@@ -32,22 +31,12 @@ class ItemController {
       stock,
       id: this.count,
     };
-    // itemRepo.addItem(item);
-    await sqlRepo.sync();
-    await sqlRepo.create({
-      id: this.count,
-      name,
-      description,
-      image,
-      price,
-      stock,
-    });
-    this.count++;
+    this.itemRepo.addItem(item);
     res.status(201).send(item);
   };
-  deleteItemById = (req: Request, res: Response) => {
+   deleteItemById = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id, 10);
-    const item = itemRepo.getItemById(id);
+    const item = await itemRepo.getItemById(id);
     if (item) {
       itemRepo.deleteItem(id);
       res.status(204).send();
@@ -55,7 +44,8 @@ class ItemController {
       res.status(404).send();
     }
   };
-  updateItem = (req: Request, res: Response) => {
+   updateItem = async (req: Request, res: Response) => {
+    try{
     const { name, description, image, price, stock } = req.body;
     const itemFromRequest: IItem = {
       image,
@@ -65,13 +55,16 @@ class ItemController {
       stock,
       id: parseInt(req.params.id, 10),
     };
-    const itemFromRepo = itemRepo.getItemById(itemFromRequest.id);
+    const itemFromRepo = await itemRepo.getItemById(itemFromRequest.id);
     if (itemFromRepo) {
       itemRepo.updateItem(itemFromRequest);
       res.status(200).send(itemFromRequest);
     } else {
       res.status(404).send();
     }
+  }catch(error){
+    res.status(500).send(error)
+  }
   };
   // patchItem = (req: Request, res: Response) => {};
 }

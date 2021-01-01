@@ -1,30 +1,52 @@
-import Sequelize from "sequelize";
+import { Sequelize, Model, DataTypes, Optional} from "sequelize";
 import sequelize from "../database/database";
 
-const Item = sequelize.define(
-  "Items",
+interface ItemCreationAttributes extends Optional<IItem, "id">{}
+
+class Item extends Model<IItem, ItemCreationAttributes > implements IItem {
+  id!: number;
+  name!: string;
+  description!: string;
+  stock!: number;
+  price!: string;
+  image!: string;
+
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+}
+
+Item.init(
   {
     id: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
+      allowNull: false
     },
     name: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
+      allowNull: false
     },
     description: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
+      allowNull: false
     },
     image: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
+      allowNull: false
     },
     price: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     stock: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
   },
-  { timestamps: false }
+  {sequelize, tableName: "Item"}
 );
+
+Item.sync()
 
 export default Item;

@@ -8,11 +8,11 @@ interface IItem {
 }
 
 interface IItemRepo {
-  getAllItems(): IItem[];
-  getItemById(id: number): IItem;
-  addItem(item: IItem): void;
-  deleteItem(id: number): void;
-  updateItem(item: IItem): void;
+  getAllItems(): Promise<IItem[]>;
+  getItemById(id: number): Promise<IItem>;
+  addItem(item: IItem): Promise<void>;
+  deleteItem(id: number): Promise<void>;
+  updateItem(item: IItem): Promise<void>;
   // patchItem(id: number, listOfPatches: ItemPropToPatch[]): void;
 }
 
