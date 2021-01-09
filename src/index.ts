@@ -6,12 +6,13 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 
 dotenv.config();
-const port = 3001 || process.env.PORT;
+const port = 3002 || process.env.PORT;
 
 const app = createServer();
 
 (async () => {
-  await createConnection();
+  const conn = await createConnection();
+  await conn.runMigrations();
   console.log("Database Initialized");
   app.listen(port);
   console.log(`Server listening on port ${port}`);

@@ -15,15 +15,14 @@ const createItem = (serverApp: Express.Application) => {
   });
 };
 
-beforeEach((done) => {
-  createConnection().then(() => {
-    console.log("Connection created");
-    done();
-  });
+beforeEach(async (done) => {
+  await createConnection();
+  await getConnection().runMigrations();
+  done();
 });
 
 afterEach(async (done) => {
-  await getConnection().dropDatabase();
+  await getConnection().undoLastMigration();
   await getConnection().close();
   done();
 });
@@ -47,13 +46,14 @@ describe("GET /item/:id", () => {
       image: "Test",
       price: 50,
     };
-    request(app).post("/item/1").send(mockItem).expect(201).expect(mockItem);
+    request(app).post("/item").send(mockItem).expect(201);
+
+    request(app).get("/item/1").set("Accept", "application/json").expect(200);
 
     request(app)
-      .get("/item")
+      .get("/item/99")
       .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
-      .expect(500, done);
+      .expect(404, done);
   });
 });
 
@@ -67,11 +67,7 @@ describe("POST /item", () => {
   };
   it("should create an item correctly", (done) => {
     let niceItem = { ...mockItem };
-    request(app)
-      .post("/item")
-      .send(niceItem)
-      .expect(201)
-      .expect(mockItem, done);
+    request(app).post("/item").send(niceItem).expect(201, done);
   });
   it("should not create an item if name is not valid", (done) => {
     let noNameItem = { ...mockItem };

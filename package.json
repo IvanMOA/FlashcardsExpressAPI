@@ -2,7 +2,7 @@
   "name": "flashcardsapi",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/server.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest --testTimeout=10000",
     "copy-assets": "ts-node tools/copyAssets",
