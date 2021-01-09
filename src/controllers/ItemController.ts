@@ -2,20 +2,23 @@ import { Request, Response } from "express";
 import itemRepo from "../data/ItemSQLRepo";
 import { validationResult } from "express-validator";
 
-
 class ItemController {
   itemRepo: IItemRepo;
-  count: number;
 
   constructor(iRepo: IItemRepo) {
     this.itemRepo = iRepo;
   }
   getAllItems = async (req: Request, res: Response) => {
-    const items = await this.itemRepo.getAllItems()
+    const items = await this.itemRepo.getAllItems();
     res.send(items);
   };
-  getItemById = (id: number) => {
-    return itemRepo.getItemById(id);
+  getItemById = async (req: Request, res: Response) => {
+    try {
+      const itemFromDb = await itemRepo.getItemById(parseInt(req.params.id, 10));
+      res.status(200).send(itemFromDb);
+    } catch (error) {
+      res.status(500).send(error);
+    }
   };
   createItem = async (req: Request, res: Response) => {
     const errors = validationResult(req);
@@ -29,12 +32,12 @@ class ItemController {
       name,
       price,
       stock,
-      id: this.count,
     };
-    this.itemRepo.addItem(item);
-    res.status(201).send(item);
+    const repoItem = await this.itemRepo.addItem(item);
+    console.log(repoItem);
+    res.status(201).send(repoItem);
   };
-   deleteItemById = async (req: Request, res: Response) => {
+  deleteItemById = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id, 10);
     const item = await itemRepo.getItemById(id);
     if (item) {
@@ -44,27 +47,27 @@ class ItemController {
       res.status(404).send();
     }
   };
-   updateItem = async (req: Request, res: Response) => {
-    try{
-    const { name, description, image, price, stock } = req.body;
-    const itemFromRequest: IItem = {
-      image,
-      description,
-      name,
-      price,
-      stock,
-      id: parseInt(req.params.id, 10),
-    };
-    const itemFromRepo = await itemRepo.getItemById(itemFromRequest.id);
-    if (itemFromRepo) {
-      itemRepo.updateItem(itemFromRequest);
-      res.status(200).send(itemFromRequest);
-    } else {
-      res.status(404).send();
+  updateItem = async (req: Request, res: Response) => {
+    try {
+      const { name, description, image, price, stock } = req.body;
+      const itemFromRequest: IItem = {
+        image,
+        description,
+        name,
+        price,
+        stock,
+        id: parseInt(req.params.id, 10),
+      };
+      const itemFromRepo = await itemRepo.getItemById(itemFromRequest.id);
+      if (itemFromRepo) {
+        await itemRepo.updateItem(itemFromRequest);
+        res.status(200).send(itemFromRequest);
+      } else {
+        res.status(404).send();
+      }
+    } catch (error) {
+      res.status(500).send(error);
     }
-  }catch(error){
-    res.status(500).send(error)
-  }
   };
   // patchItem = (req: Request, res: Response) => {};
 }

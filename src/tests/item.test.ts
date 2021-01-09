@@ -21,6 +21,25 @@ describe("GET /item", () => {
   });
 });
 
+describe("GET /item/:id", () => {
+  it("should get one item", (done) => {
+    let mockItem = {
+      description: "TestTestTest",
+      name: "Test@test.com",
+      stock: 2,
+      image: "Test",
+      price: 50,
+    };
+    request(app).post("/item").send(mockItem).expect(201).expect(mockItem);
+
+    request(app)
+      .get("/item")
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200, done);
+  });
+});
+
 describe("POST /item", () => {
   let mockItem = {
     description: "TestTestTest",

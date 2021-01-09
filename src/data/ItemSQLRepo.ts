@@ -1,21 +1,25 @@
 import { rejects } from "assert";
-import sqlRepo from "../models/Item";
+import Item from "../models/ItemModel";
+import sqlRepo from "../models/ItemModel";
 
 class ItemSQLRepo implements IItemRepo {
   async getAllItems(): Promise<IItem[]> {
-    return sqlRepo.findAll();
+    const items = await sqlRepo.findAll();
+    return items;
   }
-  async addItem(item: IItem): Promise<void> {
-    sqlRepo.create({
+  async addItem(item: IItem): Promise<IItem> {
+    const createdItem = await sqlRepo.create({
       name: item.name,
       description: item.description,
       image: item.image,
       price: item.price,
       stock: item.stock,
     });
+    return createdItem;
   }
-  getItemById(id: number): Promise<IItem> {
-    return sqlRepo.findByPk(id);
+  async getItemById(id: number): Promise<IItem> {
+    const itemFromDb = await sqlRepo.findByPk(id);
+    return itemFromDb;
   }
   async deleteItem(id: number): Promise<void> {
     const itemFromDb = await sqlRepo.findByPk(id);
@@ -28,21 +32,8 @@ class ItemSQLRepo implements IItemRepo {
     }
   }
   async updateItem(item: IItem): Promise<void> {
-    const itemFromDb = await sqlRepo.findByPk(item.id);
-    if (itemFromDb) {
-      const { name, description, image, stock, price } = item;
-      itemFromDb.name = name;
-      itemFromDb.description = description;
-      itemFromDb.image = image;
-      itemFromDb.stock = stock;
-      itemFromDb.price = price;
-    } else {
-      return new Promise<void>((resolve, reject) => {
-        reject();
-      });
-    }
+    await Item.update(item, { returning: false, where: { id: item.id } });
   }
 }
 
-export default new ItemSQLRepo()
-
+export default new ItemSQLRepo();
