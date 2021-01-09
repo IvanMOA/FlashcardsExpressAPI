@@ -1,6 +1,9 @@
 import request from "supertest";
 import { createConnection, getConnection } from "typeorm";
-import app from "../server";
+import createServer from "../server";
+import "reflect-metadata";
+
+const app = createServer();
 
 const createItem = (serverApp: Express.Application) => {
   return request(app).post("/item").send({
@@ -15,15 +18,14 @@ const createItem = (serverApp: Express.Application) => {
 beforeEach((done) => {
   createConnection().then(() => {
     console.log("Connection created");
-
     done();
   });
 });
 
-afterEach((done) => {
-  getConnection()
-    .close()
-    .then(() => done());
+afterEach(async (done) => {
+  await getConnection().dropDatabase();
+  await getConnection().close();
+  done();
 });
 
 describe("GET /item", () => {

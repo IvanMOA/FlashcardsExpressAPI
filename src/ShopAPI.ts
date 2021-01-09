@@ -1,4 +1,4 @@
-interface IItem {
+export interface IItem {
   id?: number;
   name: string;
   description: string;
@@ -7,7 +7,7 @@ interface IItem {
   image: string;
 }
 
-interface IItemRepo {
+export interface IItemRepo {
   getAllItems(): Promise<IItem[]>;
   getItemById(id: number): Promise<IItem>;
   addItem(item: IItem): Promise<IItem>;
@@ -16,9 +16,28 @@ interface IItemRepo {
   // patchItem(id: number, listOfPatches: ItemPropToPatch[]): void;
 }
 
-type ItemPropToPatch = {
+export type ItemPropToPatch = {
   field: "id" | "name" | "description" | "stock" | "price" | "image";
   value: number | string;
 };
 
-export { IItemRepo, IItem, ItemPropToPatch };
+//  Amazon Web Services (AWS)
+export interface AWSIDToken {
+  header: {
+    kid: string;
+    alg: string;
+  };
+  payload: {
+    sub: string;
+    aud: string;
+    email_verified: string;
+    token_use: string;
+    auth_time: string;
+    iss: string;
+    "cognito:username": string;
+    exp: string;
+    given_name: string;
+    iat: string;
+    email: string;
+  };
+}

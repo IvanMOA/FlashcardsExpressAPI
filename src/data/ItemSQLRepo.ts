@@ -1,5 +1,6 @@
 import { getManager, getRepository } from "typeorm";
 import { Item } from "../entity/Item";
+import { IItem, IItemRepo } from "./IItem";
 
 class ItemSQLRepo implements IItemRepo {
   async getAllItems(): Promise<IItem[]> {

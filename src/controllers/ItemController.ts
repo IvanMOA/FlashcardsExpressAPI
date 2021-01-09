@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import itemRepo from "../data/ItemSQLRepo";
 import { validationResult } from "express-validator";
+import { IItem, IItemRepo } from "../data/IItem";
 
 class ItemController {
   itemRepo: IItemRepo;
