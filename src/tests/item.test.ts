@@ -1,9 +1,9 @@
 import request from "supertest";
-import ItemDB from "../models/ItemModel";
+import { createConnection, getConnection } from "typeorm";
 import app from "../server";
 
 const createItem = (serverApp: Express.Application) => {
-  return request(serverApp).post("/item").send({
+  return request(app).post("/item").send({
     description: "Test",
     name: "Test@test.com",
     stock: 2,
@@ -13,9 +13,17 @@ const createItem = (serverApp: Express.Application) => {
 };
 
 beforeEach((done) => {
-  ItemDB.drop().then(() => {
+  createConnection().then(() => {
+    console.log("Connection created");
+
     done();
   });
+});
+
+afterEach((done) => {
+  getConnection()
+    .close()
+    .then(() => done());
 });
 
 describe("GET /item", () => {

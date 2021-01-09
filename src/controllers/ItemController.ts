@@ -14,8 +14,14 @@ class ItemController {
   };
   getItemById = async (req: Request, res: Response) => {
     try {
-      const itemFromDb = await itemRepo.getItemById(parseInt(req.params.id, 10));
-      res.status(200).send(itemFromDb);
+      const itemFromDb = await itemRepo.getItemById(
+        parseInt(req.params.id, 10)
+      );
+      if (!itemFromDb) {
+        res.status(404).send();
+      } else {
+        res.status(200).send(itemFromDb);
+      }
     } catch (error) {
       res.status(500).send(error);
     }

@@ -1,38 +1,36 @@
-import { rejects } from "assert";
-import Item from "../models/ItemModel";
-import sqlRepo from "../models/ItemModel";
+import { getManager, getRepository } from "typeorm";
+import { Item } from "../entity/Item";
 
 class ItemSQLRepo implements IItemRepo {
   async getAllItems(): Promise<IItem[]> {
-    const items = await sqlRepo.findAll();
-    return items;
+    return getManager().find(Item);
+  }
+  async getItemById(id: number): Promise<IItem> {
+    return getRepository(Item).findOne(id);
   }
   async addItem(item: IItem): Promise<IItem> {
-    const createdItem = await sqlRepo.create({
+    const user = getManager().create(Item, {
       name: item.name,
       description: item.description,
       image: item.image,
       price: item.price,
       stock: item.stock,
     });
-    return createdItem;
-  }
-  async getItemById(id: number): Promise<IItem> {
-    const itemFromDb = await sqlRepo.findByPk(id);
-    return itemFromDb;
+    const createdUser = await getManager().save(user);
+    return createdUser;
   }
   async deleteItem(id: number): Promise<void> {
-    const itemFromDb = await sqlRepo.findByPk(id);
-    if (itemFromDb) {
-      return await itemFromDb.destroy();
-    } else {
-      return new Promise<void>((resolve, reject) => {
-        reject();
-      });
-    }
+    await getManager().delete(Item, id);
   }
   async updateItem(item: IItem): Promise<void> {
-    await Item.update(item, { returning: false, where: { id: item.id } });
+    const { name, description, image, price, stock } = item;
+    await getManager().update(Item, item.id, {
+      name,
+      description,
+      image,
+      price,
+      stock,
+    });
   }
 }
 
