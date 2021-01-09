@@ -1,4 +1,5 @@
 import request from "supertest";
+import ItemDB from "../models/ItemModel";
 import app from "../server";
 
 const createItem = (serverApp: Express.Application) => {
@@ -10,6 +11,12 @@ const createItem = (serverApp: Express.Application) => {
     price: 50,
   });
 };
+
+beforeEach((done) => {
+  ItemDB.drop().then(() => {
+    done();
+  });
+});
 
 describe("GET /item", () => {
   it("should get all items", (done) => {
@@ -30,13 +37,13 @@ describe("GET /item/:id", () => {
       image: "Test",
       price: 50,
     };
-    request(app).post("/item").send(mockItem).expect(201).expect(mockItem);
+    request(app).post("/item/1").send(mockItem).expect(201).expect(mockItem);
 
     request(app)
       .get("/item")
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(200, done);
+      .expect(500, done);
   });
 });
 

@@ -1,9 +1,9 @@
-import { Sequelize, Model, DataTypes, Optional} from "sequelize";
+import { Sequelize, Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../database/database";
 
-interface ItemCreationAttributes extends Optional<IItem, "id">{}
+interface ItemCreationAttributes extends Optional<IItem, "id"> {}
 
-class Item extends Model<IItem, ItemCreationAttributes > implements IItem {
+class Item extends Model<IItem, ItemCreationAttributes> implements IItem {
   id!: number;
   name!: string;
   description!: string;
@@ -21,32 +21,32 @@ Item.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      allowNull: false
+      allowNull: false,
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     image: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     price: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
     stock: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
     },
   },
-  {sequelize, tableName: "Item"}
+  { sequelize, tableName: "Item" }
 );
 
-Item.sync()
+Item.sync();
 
 export default Item;
